@@ -4,33 +4,32 @@ import time
 import re
 import Config.slackConfig as slackConfig
 from slackclient import SlackClient
-
-
-# instantiate Slack client
-slack_client = SlackClient(slackConfig.botOAuth)
-# starterbot's user ID in Slack: value is assigned after the bot starts up
-starterbot_id = None
+import asyncio
 
 # constants
 RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
-
 class MsgHandler:
+    # instantiate Slack client
+    slack_client = SlackClient(slackConfig.botOAuth)
+    # starterbot's user ID in Slack: value is assigned after the bot starts up
+    starterbot_id = None 
     def connect(self):
-        if slack_client.rtm_connect(with_team_state=False):
+        if self.slack_client.rtm_connect(with_team_state=False):
             print("Starter Bot connected and running!")
             # Read bot's user ID by calling Web API method `auth.test`
-            self.starterbot_id = slack_client.api_call("auth.test")["user_id"]
+            self.starterbot_id = self.slack_client.api_call("auth.test")["user_id"]
         else:
             print("Connection failed. Exception traceback printed above.")
 
     def read_chat(self):
-        command, channel = self.parse_bot_commands(slack_client.rtm_read())
-        if command:
-            self.handle_command(command, channel)
-        time.sleep(RTM_READ_DELAY)
+        while True:
+            command, channel = self.parse_bot_commands(self.slack_client.rtm_read())
+            if command:
+                self.handle_command(command, channel)
+            time.sleep(RTM_READ_DELAY)
 
     def parse_bot_commands(self, slack_events):
         """
@@ -69,7 +68,7 @@ class MsgHandler:
             response = "Sure...write some more code then I can do that!"
 
         # Sends the response back to the channel
-        slack_client.api_call(
+        self.slack_client.api_call(
             "chat.postMessage",
             channel=channel,
             text=response or default_response
