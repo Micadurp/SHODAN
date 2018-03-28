@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-workspace = "127.0.0.1"
-clientID =""
-clientSecret =""
-stopsign = '\r\n'
+BOT_OAUTH = ''
+CLIENT_ID = ''
+CLIENT_SECRET = ''

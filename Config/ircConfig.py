@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-server = "127.0.0.1"
-#server = ""
-channel = ""
-nick ="SHODAN"
-stopsign = '\r\n'
+SERVER = '127.0.0.1'
+CHANNEL = ''
+NICK = 'SHODAN'
+STOPSIGN = '\r\n'

@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 import discord
 import asyncio
-
-TOKEN = ''
+import Config.discordConfig as discordConfig
 
 client = discord.Client()
 
@@ -25,7 +24,7 @@ async def on_ready():
 
 class MsgHandler:
     def connect(self):
-        client.run(TOKEN)
+        client.run(discordConfig.TOKEN)
     
     def logout(self):
         client.logout()
