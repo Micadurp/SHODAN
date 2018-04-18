@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import socket
-import Config.ircConfig as ircConfig
+from ..Config import ircConfig
 import select
 
 class MsgHandler:

@@ -2,7 +2,7 @@
 import os
 import time
 import re
-import Config.slackConfig as slackConfig
+from ..Config import slackConfig
 from slackclient import SlackClient
 import asyncio
 
@@ -12,14 +12,14 @@ EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
 class MsgHandler:
-    genChatHandler = None
+    send_message = None
     # instantiate Slack client
     slack_client = SlackClient(slackConfig.BOT_OAUTH)
     # starterbot's user ID in Slack: value is assigned after the bot starts up
     starterbot_id = None 
     
-    def __init__(self, generalChatHandler):
-        self.genChatHandler = generalChatHandler
+    def __init__(self, general_send_message):
+        self.general_send_message = general_send_message
 
     def connect(self):
         if self.slack_client.rtm_connect(with_team_state=False):
@@ -44,7 +44,7 @@ class MsgHandler:
         """
         for event in slack_events:
             if event["type"] == "message" and not "subtype" in event:
-                self.genChatHandler.send_messages("test")
+                self.general_send_message("test")
                 user_id, message = self.parse_direct_mention(event["text"])
                 if user_id == self.starterbot_id:
                     return message, event["channel"]

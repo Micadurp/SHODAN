@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import discord
 import asyncio
-import Config.discordConfig as discordConfig
+from ..Config import discordConfig
 
 client = discord.Client()
 
