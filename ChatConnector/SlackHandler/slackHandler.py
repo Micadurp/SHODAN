@@ -12,10 +12,15 @@ EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
 class MsgHandler:
+    genChatHandler = None
     # instantiate Slack client
-    slack_client = SlackClient(slackConfig.botOAuth)
+    slack_client = SlackClient(slackConfig.BOT_OAUTH)
     # starterbot's user ID in Slack: value is assigned after the bot starts up
     starterbot_id = None 
+    
+    def __init__(self, generalChatHandler):
+        self.genChatHandler = generalChatHandler
+
     def connect(self):
         if self.slack_client.rtm_connect(with_team_state=False):
             print("Starter Bot connected and running!")
@@ -39,6 +44,7 @@ class MsgHandler:
         """
         for event in slack_events:
             if event["type"] == "message" and not "subtype" in event:
+                self.genChatHandler.send_messages("test")
                 user_id, message = self.parse_direct_mention(event["text"])
                 if user_id == self.starterbot_id:
                     return message, event["channel"]
