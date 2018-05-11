@@ -32,9 +32,11 @@ class ChatHandler:
         self.slackMsgHandler = slackHandler.MsgHandler(self.send_messages)
         self.discordMsgHandler = discordHandler.MsgHandler(self.send_messages)
 
-    def send_messages(self, message):
-        self.discordMsgHandler.send_message(message)
-        #self.slackMsgHandler.send_message(message)
+    def send_messages(self, message, source):
+        if source != "discord":
+            self.discordMsgHandler.send_message(message)
+        if source != "slack":
+            self.slackMsgHandler.send_message(message)
 
     def start(self):       
         executor = ThreadPoolExecutor(2)

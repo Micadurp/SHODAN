@@ -12,7 +12,7 @@ EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
 class MsgHandler:
-    send_message = None
+    send_general_message = None
     # instantiate Slack client
     slack_client = SlackClient(slackConfig.BOT_OAUTH)
     # starterbot's user ID in Slack: value is assigned after the bot starts up
@@ -79,3 +79,6 @@ class MsgHandler:
             channel=channel,
             text=response or default_response
         )
+
+    def send_message(self, message):
+        print("slack send message not implemented")

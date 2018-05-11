@@ -22,10 +22,10 @@ async def on_ready():
     print('------')
 
 class MsgHandler:
-    genChatHandler = None
+    send_general_message = None
 
-    def __init__(self, generalChatHandler):
-        self.genChatHandler = generalChatHandler
+    def __init__(self, send_general_message):
+        self.send_general_message = send_general_message
 
     async def connect(self):
         await client.start(discordConfig.TOKEN)
