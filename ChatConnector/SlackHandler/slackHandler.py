@@ -10,6 +10,7 @@ import asyncio
 RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
+SOURCE = "slack"
 
 class MsgHandler:
     send_general_message = None
@@ -19,7 +20,7 @@ class MsgHandler:
     starterbot_id = None 
     
     def __init__(self, general_send_message):
-        self.general_send_message = general_send_message
+        self.send_general_message = general_send_message
 
     def connect(self):
         if self.slack_client.rtm_connect(with_team_state=False):
@@ -29,12 +30,12 @@ class MsgHandler:
         else:
             print("Connection failed. Exception traceback printed above.")
 
-    def read_chat(self):
-        while True:
-            command, channel = self.parse_bot_commands(self.slack_client.rtm_read())
-            if command:
-                self.handle_command(command, channel)
-            time.sleep(RTM_READ_DELAY)
+    def process_messages(self):
+        command, channel = self.parse_bot_commands(self.slack_client.rtm_read())
+        if command:
+            self.send_general_message(command, channel, SOURCE)
+            #self.handle_command(command, channel)
+        time.sleep(RTM_READ_DELAY)
 
     def parse_bot_commands(self, slack_events):
         """
@@ -44,7 +45,6 @@ class MsgHandler:
         """
         for event in slack_events:
             if event["type"] == "message" and not "subtype" in event:
-                self.general_send_message("test")
                 user_id, message = self.parse_direct_mention(event["text"])
                 if user_id == self.starterbot_id:
                     return message, event["channel"]
@@ -81,4 +81,9 @@ class MsgHandler:
         )
 
     def send_message(self, message):
-        print("slack send message not implemented")
+        self.slack_client.api_call(
+            "chat.postMessage",
+            channel="botdev",
+            text=message
+        )
+        print("Sent slack message")

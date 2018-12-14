@@ -4,7 +4,7 @@ from ChatConnector import ChatConnector as chatConnector
 def main():
     chatHandler = chatConnector.ChatHandler()
     chatHandler.start()
-    print("what")
+    print("bye!")
 
 if __name__ == '__main__':
     main()
